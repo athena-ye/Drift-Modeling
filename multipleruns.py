@@ -1,3 +1,7 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import random as rand
+
 def multipleruns(numberofruns, temperaturefrequencyarray, per, gain, initvariabilityarray, driftvariabilityarray, heritabilityarray):
 #     plt.title ('Number of Flies per Day')
 #     plt.xlabel ('Days')
