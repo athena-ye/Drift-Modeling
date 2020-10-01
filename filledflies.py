@@ -77,7 +77,7 @@ def filledflies(numberofflies, flyHP, dailyHPchange, tempdata, matureAge, initva
         initvararray[t]=initvariability
         driftvararray[t]=driftvariability
 #         global flies
-#         flies=flyarray[t]
+        flies=flyarray[t]
 #         print(flies)
         
 #     fig=plt.figure(figsize=(8,8))
