@@ -5,7 +5,7 @@ import numpy as np
 import filledflies as ff
 
 
-def multipleruns(numberofdays, numberofruns, temperaturefrequencyarray, per, gain, initvariabilityarray, driftvariabilityarray, heritabilityarray):
+def multipleruns(numberofdays, numberofflies, numberofruns, temperaturefrequencyarray, per, gain, initvariabilityarray, driftvariabilityarray, heritabilityarray):
 #     plt.title ('Number of Flies per Day')
 #     plt.xlabel ('Days')
 #     plt.ylabel ('Flies')
@@ -22,10 +22,10 @@ def multipleruns(numberofdays, numberofruns, temperaturefrequencyarray, per, gai
     for i in range(0,2):
 #         plt.subplot(2,100,(1,45))
         tempdata=gain[i]*np.sin(x*2*np.pi/per[i]+182*2*np.pi)+15.5
-        [fliesmatrix,flyarray]=ff.filledflies(10,100,4,tempdata,5,initvariabilityarray[i],driftvariabilityarray[i],per[i], gain[i])
+        [fliesmatrix,flyarray]=ff.filledflies(10,numberofflies,4,tempdata,5,initvariabilityarray[i],driftvariabilityarray[i],per[i], gain[i])
         for f in range(0, fliesmatrix.shape[0]):
             plt.plot (fliesmatrix[f,:,2], colors[i])
-            plt.plot(np.nanmean(fliesmatrix[:,:,2],axis=0),colorsi[i])
+        plt.plot(np.nanmean(fliesmatrix[:,:,2],axis=0),colorsi[i])
         plt.title ('Fly Preferences')
         plt.xlabel ('Days')
         plt.ylabel ('Fly Preferences')
