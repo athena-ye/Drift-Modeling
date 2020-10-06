@@ -46,7 +46,7 @@ def filledflies(numberofflies, flyHP, dailyHPchange, tempdata, matureAge, initva
                 matureHit=matureAge/(0.2306*effectivetemp*effectivetemp-11.828*effectivetemp+158.34+1)
                 fliesmatrix[f,t,1]=fliesmatrix[f,t-1,1]+matureHit
                 fliesmatrix[f,t,2]=fliesmatrix[f,t,2]+(np.random.normal()-.5)*driftvariability
-#                 print(fliesmatrix[f,:,2])
+                # print(fliesmatrix[f,:,2])
             HPHit=flyHP/(0.4074*effectivetemp*effectivetemp-28.356*effectivetemp+506.2)
             if fliesmatrix[f,t-1,0]>HPHit: # Does Fly die
                 fliesmatrix[f,t,0]=fliesmatrix[f,t-1,0]-HPHit
@@ -67,6 +67,7 @@ def filledflies(numberofflies, flyHP, dailyHPchange, tempdata, matureAge, initva
                 if newflyHP<=0:
                     break
                 newbornflies=newbornflies+1
+                # print(newbornflies)
                 numberofflies=numberofflies+1
             if numberofflies==flybuffer:
                 extrabuffer=np.zeros((20,numberofdays, numdimensions))
@@ -79,7 +80,7 @@ def filledflies(numberofflies, flyHP, dailyHPchange, tempdata, matureAge, initva
 #         global flies
 #         flies=flyarray[t]
 #         print(flies)
-        
+
 #     fig=plt.figure(figsize=(8,8))
 #     #fig.add_subplot(1,2,1)
 #     plt.subplot(2,100,(1,45))
@@ -96,13 +97,13 @@ def filledflies(numberofflies, flyHP, dailyHPchange, tempdata, matureAge, initva
 #     fliesmatrix[:,:,2]=fliesmatrix[:,:,2]+tempdata[t]
 #     for f in range(0, fliesmatrix.shape[0]):
 #         plt.plot(fliesmatrix[f,:,2])
-        
+
 #     plt.subplot(2,100,(55,99))
 #     plt.plot (flyarray, 'gray')
 #     plt.title ('Number of Flies per Day')
 #     plt.xlabel ('Days')
 #     plt.ylabel ('Flies')
-    
+
 #     print("A total of "+str(numberofdeadflies)+" flies died in this simulation.")
 #     print("A total of "+str(newbornflies)+" flies were born in this simulation!")
     return fliesmatrix, flyarray;
