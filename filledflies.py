@@ -3,6 +3,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import random as rand
+import scipy.stats as stat
 
 def filledflies(numberofflies, flyHP, dailyHPchange, tempdata, matureAge, initvariability, driftvariability, per, gain, firstday=1, flynerals=True):
     "This function needs initial # of flies, number of days, the fly's hit points, and increments the HP goes down by each day"
@@ -16,7 +17,7 @@ def filledflies(numberofflies, flyHP, dailyHPchange, tempdata, matureAge, initva
     fliesmatrix[:,:,:]=np.nan
     fliesmatrix[0:numberofflies,0,0]=newflyHP
     fliesmatrix[0:numberofflies,0,1]=firstday
-    fliesmatrix[0:numberofflies,0,2]=np.random.normal(0,initvariability,numberofflies)*initvariability
+    fliesmatrix[0:numberofflies,0,2]=np.random.normal(0,initvariability,numberofflies)
     numberofdeadflies=0
     newbornflies=0
     matureAge=10
@@ -35,17 +36,18 @@ def filledflies(numberofflies, flyHP, dailyHPchange, tempdata, matureAge, initva
 #             if f>21:
                 #print(fliesmatrix[f,t-1,2])
 #             print(fliesmatrix[f,t,2])
-            effectivetemp=tempdata[t]-fliesmatrix[f,t,2]+initvariability/2
+            effectivetemp=tempdata[t]-fliesmatrix[f,t,2]
             if (fliesmatrix[f,t-1,1]!=np.nan) & (fliesmatrix[f,t-1,1]<10):
                 matureHit=matureAge/(0.2306*effectivetemp*effectivetemp-11.828*effectivetemp+158.34+1)
                 q=fliesmatrix[f,t-1,1]
                 fliesmatrix[f,t,1]=fliesmatrix[f,t-1,1]+matureHit
                 if fliesmatrix[f,t,1]>=10:
-                    fliesmatrix[f,t,2]=np.random.normal()*initvariability
+                    fliesmatrix[f,t,2]=np.random.normal(0, initvariability)
             if fliesmatrix[f,t-1,1]>=10:
                 matureHit=matureAge/(0.2306*effectivetemp*effectivetemp-11.828*effectivetemp+158.34+1)
                 fliesmatrix[f,t,1]=fliesmatrix[f,t-1,1]+matureHit
-                fliesmatrix[f,t,2]=fliesmatrix[f,t,2]+(np.random.normal()-.5)*driftvariability
+                # fliesmatrix[f,t,2]=fliesmatrix[f,t,2]+(np.random.normal(0,driftvariability))
+                fliesmatrix[f,t,2]=metropolishastingsdrift(fliesmatrix[f,t,2], driftvariability)
                 # print(fliesmatrix[f,:,2])
             HPHit=flyHP/(0.4074*effectivetemp*effectivetemp-28.356*effectivetemp+506.2)
             if fliesmatrix[f,t-1,0]>HPHit: # Does Fly die
@@ -107,3 +109,12 @@ def filledflies(numberofflies, flyHP, dailyHPchange, tempdata, matureAge, initva
 #     print("A total of "+str(numberofdeadflies)+" flies died in this simulation.")
 #     print("A total of "+str(newbornflies)+" flies were born in this simulation!")
     return fliesmatrix, flyarray;
+
+def metropolishastingsdrift(currentvalue, variability):
+    pcurrentvalue=stat.norm.pdf(currentvalue,0,variability)
+    proposedvalue=np.random.normal(0,variability)
+    pproposedvalue=stat.norm.pdf(proposedvalue,0,variability)
+    if pproposedvalue/pcurrentvalue>(1-np.random.rand()):
+        return proposedvalue
+    else:
+        return currentvalue

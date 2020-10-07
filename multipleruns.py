@@ -4,7 +4,7 @@ import random as rand
 import numpy as np
 import filledflies as ff
 
-def multipleruns(numberofruns, numberofdays, temperaturefrequencyarray, per, gain, initvariabilityarray, driftvariabilityarray, heritabilityarray):
+def multipleruns(numberofruns, numberofflies, numberofdays, temperaturefrequencyarray, meantemp, per, gain, initvariabilityarray, driftvariabilityarray, heritabilityarray):
 #     plt.title ('Number of Flies per Day')
 #     plt.xlabel ('Days')
 #     plt.ylabel ('Flies')
@@ -24,11 +24,11 @@ def multipleruns(numberofruns, numberofdays, temperaturefrequencyarray, per, gai
         for n in range(0,numberofruns):
 
 #         plt.subplot(2,100,(1,45))
-            tempdata[i,:]=gain[i]*np.sin(x*2*np.pi/per[i]+182*2*np.pi)+21
-            [fliesmatrix,flyarray]=ff.filledflies(50,100,4,tempdata[i,:],5,initvariabilityarray[i],driftvariabilityarray[i],per[i], gain[i])
+            tempdata[i,:]=gain[i]*np.sin(x*2*np.pi/per[i]+182*2*np.pi)+meantemp[i]
+            [fliesmatrix,flyarray]=ff.filledflies(numberofflies,100,4,tempdata[i,:],5,initvariabilityarray[i],driftvariabilityarray[i],per[i], gain[i])
             bigarray[n,:,i]=flyarray
         for f in range(0, fliesmatrix.shape[0]):
-            plt.plot (fliesmatrix[f,:,2], colors[i])
+            plt.plot (fliesmatrix[f,:,2], colors[i], lw=.4)
         plt.plot(np.nanmean(fliesmatrix[:,:,2],axis=0),colorsi[i])
 
     plt.title ('Fly Preferences')
@@ -55,7 +55,7 @@ def multipleruns(numberofruns, numberofdays, temperaturefrequencyarray, per, gai
         # ff.filledflies(10,100,4,tempdata,5,0,4,365,8.5)
 #         bigarray=np.full((1,numberofdays),flyarray)
 #         flyarray[0]=numberofflies
-            plt.plot (bigarray[n,:,i], colors[i])
+            plt.plot (bigarray[n,:,i], colors[i], lw=.4)
         # bigarray[i]=flyarray
 #     print(bigarray)
             for q in range(numberofdays):
