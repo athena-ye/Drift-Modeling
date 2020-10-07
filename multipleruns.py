@@ -63,6 +63,7 @@ def multipleruns(numberofruns, numberofflies, numberofdays, temperaturefrequency
                 mean[q]=meanflies
 #     print(mean)
             plt.plot(mean,colorsi[i])
+    
     plt.show()
     print('Bigarray size')
     print(bigarray.shape)

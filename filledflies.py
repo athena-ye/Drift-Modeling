@@ -10,6 +10,9 @@ def filledflies(numberofflies, flyHP, dailyHPchange, tempdata, matureAge, initva
     newflyHP=flyHP
     flybuffer=numberofflies*2
     numdimensions=3
+
+    birthprob=.366 #Birthprob .366 from previous code
+    deathprob=.0203 # Odds of death from random chance. .0203 from previous codes
 #     global numberofdays
     numberofdays=tempdata.shape[0]
 #     global fliesmatrix
@@ -63,7 +66,7 @@ def filledflies(numberofflies, flyHP, dailyHPchange, tempdata, matureAge, initva
                 fliesmatrix[f,t:,:]=np.nan
                 numberofdeadflies=numberofdeadflies+1
                 numberofflies=numberofflies-1
-            if (fliesmatrix[f,t,1]>=matureAge) & (np.random.random_sample() < .366) & (fliesmatrix[f,t,0]!=0):
+            if (fliesmatrix[f,t,1]>=matureAge) & (np.random.random_sample() < birthprob) & (fliesmatrix[f,t,0]!=0):
                 fliesmatrix[numberofflies,t,0]=newflyHP
                 fliesmatrix[numberofflies,t,2]=fliesmatrix[f,t,2]
                 if newflyHP<=0:
