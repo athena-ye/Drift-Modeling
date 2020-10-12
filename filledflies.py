@@ -12,7 +12,7 @@ def filledflies(numberofflies, flyHP, dailyHPchange, tempdata, matureAge, initva
     numdimensions=3
 
     birthprob=.366 #Birthprob .366 from previous code
-    deathprob=.0203 # Odds of death from random chance. .0203 from previous codes
+    deathprob=.0003 # Odds of death from random chance. .0203 from previous codes
 #     global numberofdays
     numberofdays=tempdata.shape[0]
 #     global fliesmatrix
@@ -57,7 +57,7 @@ def filledflies(numberofflies, flyHP, dailyHPchange, tempdata, matureAge, initva
                 fliesmatrix[f,t,0]=fliesmatrix[f,t-1,0]-HPHit
             else:
                 fliesmatrix[f,t:,:]=np.nan
-            if (np.random.random_sample() < .0203):
+            if (np.random.random_sample() < deathprob):
                 fliesmatrix[f,t:,:]=np.nan
 #             print(fliesmatrix[f,t,0])
 #             print(fliesmatrix[f,t-1,0])
@@ -114,10 +114,15 @@ def filledflies(numberofflies, flyHP, dailyHPchange, tempdata, matureAge, initva
     return fliesmatrix, flyarray;
 
 def metropolishastingsdrift(currentvalue, variability):
+    #randomly drift using metropolishastings to avoid too much of a difference
+    percentdrift=.1
     pcurrentvalue=stat.norm.pdf(currentvalue,0,variability)
-    proposedvalue=np.random.normal(0,variability)
+    # proposedvalue=np.random.normal(0,variability)
+    proposedvalue=np.random.normal(0,variability)*percentdrift+currentvalue*(1-percentdrift)
+
     pproposedvalue=stat.norm.pdf(proposedvalue,0,variability)
     if pproposedvalue/pcurrentvalue>(1-np.random.rand()):
+        # return proposedvalue*percentdrift+currentvalue*(1-percentdrift)
         return proposedvalue
     else:
         return currentvalue
