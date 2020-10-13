@@ -57,14 +57,15 @@ def filledflies(numberofflies, flyHP, dailyHPchange, tempdata, matureAge, initva
                     fliesmatrix[f,t,2]=metropolishastingsdrift(fliesmatrix[f,t,2], driftvariability)
                     # print(fliesmatrix[f,:,2])
                 HPHit=flyHP/(0.4074*effectivetemp*effectivetemp-28.356*effectivetemp+506.2)
-                if (np.random.random_sample() < deathprob):
+                if (np.random.random_sample() < deathprob) & (not np.isnan(fliesmatrix[f,t-1,2])):
                     fliesmatrix[f,t:,:]=np.nan
                     numberofdeadflies=numberofdeadflies+1
                 elif fliesmatrix[f,t-1,0]>HPHit: # Does Fly die
                     fliesmatrix[f,t,0]=fliesmatrix[f,t-1,0]-HPHit
-                elif (fliesmatrix[f,t-1,0]<HPHit) & (fliesmatrix[f,t-1,0]>0):
+                elif (fliesmatrix[f,t-1,0]<HPHit) & (fliesmatrix[f,t-1,0]>0) & (fliesmatrix[f,t,2] != np.nan):
                     fliesmatrix[f,t:,:]=np.nan
                     numberofdeadflies=numberofdeadflies+1
+
 
 
     #             print(fliesmatrix[f,t,0])
