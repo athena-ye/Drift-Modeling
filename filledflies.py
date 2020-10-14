@@ -12,8 +12,8 @@ def filledflies(numberofflies, flyHP, dailyHPchange, tempdata, matureAge, initva
     flybuffer=numberofflies*10
     numdimensions=3
 
-    birthprob=.366 #Birthprob .366 from previous code
-    deathprob=.0603 # Odds of death from random chance. .0203 from previous codes
+    birthprob=.0366 #Birthprob .366 from previous code
+    deathprob=.0203 # Odds of death from random chance. .0203 from previous codes
 #     global numberofdays
     numberofdays=tempdata.shape[0]
 #     global fliesmatrix
@@ -96,8 +96,8 @@ def filledflies(numberofflies, flyHP, dailyHPchange, tempdata, matureAge, initva
         initvararray[t]=initvariability
         driftvararray[t]=driftvariability
         toc = time.perf_counter()
-        print("Day "+str(t) + " took " + str(toc-tic))
-        print("Total of "+str(numberofflies)+" have lived and "+str(numberofdeadflies) + "have died")
+        # print("Day "+str(t) + " took " + str(toc-tic))
+        # print("Total of "+str(numberofflies)+" have lived and "+str(numberofdeadflies) + " have died")
 #         global flies
 #         flies=flyarray[t]
 #         print(flies)
@@ -133,7 +133,7 @@ def filledflies(numberofflies, flyHP, dailyHPchange, tempdata, matureAge, initva
 
 def metropolishastingsdrift(currentvalue, variability):
     #randomly drift using metropolishastings to avoid too much of a difference
-    percentdrift=.1
+    percentdrift=.9999
     pcurrentvalue=stat.norm.pdf(currentvalue,0,variability)
     # proposedvalue=np.random.normal(0,variability)
     proposedvalue=np.random.normal(0,variability)*percentdrift+currentvalue*(1-percentdrift)
