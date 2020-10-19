@@ -35,52 +35,50 @@ def filledflies(numberofflies, flyHP, dailyHPchange, tempdata, matureAge, initva
             if fliesmatrix[f,t,2]!=np.nan:
                 fliesmatrix[f,t,2]=fliesmatrix[f,t-1,2]
                 effectivetemp=tempdata[t]-fliesmatrix[f,t,2]
-                if (fliesmatrix[f,t-1,1]!=np.nan) & (fliesmatrix[f,t-1,1]<10):
-                    matureHit=matureAge/(0.2306*effectivetemp*effectivetemp-11.828*effectivetemp+158.34+1)
-                    q=fliesmatrix[f,t-1,1]
+                if (fliesmatrix[f,t-1,1]!=np.nan) & (fliesmatrix[f,t-1,1]<10): 
+                    matureHit=matureAge/(0.2306*effectivetemp*effectivetemp-11.828*effectivetemp+158.34+1) # From Cain et al.
+                    q=fliesmatrix[f,t-1,1] # only "q" in the code
                     fliesmatrix[f,t,1]=fliesmatrix[f,t-1,1]+matureHit
                     if fliesmatrix[f,t,1]>=10:
                         fliesmatrix[f,t,2]=np.random.normal(0, initvariability)
                 if fliesmatrix[f,t-1,1]>=10:
-                    matureHit=matureAge/(0.2306*effectivetemp*effectivetemp-11.828*effectivetemp+158.34+1)
+                    matureHit=matureAge/(0.2306*effectivetemp*effectivetemp-11.828*effectivetemp+158.34+1) # From Cain et al. Can't we pull this out in front of the loop?
                     fliesmatrix[f,t,1]=fliesmatrix[f,t-1,1]+matureHit
-                    # fliesmatrix[f,t,2]=fliesmatrix[f,t,2]+(np.random.normal(0,driftvariability))
                     fliesmatrix[f,t,2]=metropolishastingsdrift(fliesmatrix[f,t,2], driftvariability)
-                    # print(fliesmatrix[f,:,2])
                 HPHit=flyHP/(0.4074*effectivetemp*effectivetemp-28.356*effectivetemp+506.2)
-                if (np.random.random_sample() < deathprob) & (not np.isnan(fliesmatrix[f,t-1,2])):
+                if (np.random.random_sample() < deathprob) & (not np.isnan(fliesmatrix[f,t-1,2])): # Fly dies due to random chance
                     fliesmatrix[f,t:,:]=np.nan
                     numberofdeadflies=numberofdeadflies+1
-                elif fliesmatrix[f,t-1,0]>HPHit: # Does Fly die
+                elif fliesmatrix[f,t-1,0]>HPHit: # Daily subtraction of HPHit
                     fliesmatrix[f,t,0]=fliesmatrix[f,t-1,0]-HPHit
-                elif (fliesmatrix[f,t-1,0]<HPHit) & (fliesmatrix[f,t-1,0]>0) & (fliesmatrix[f,t,2] != np.nan):
+                elif (fliesmatrix[f,t-1,0]<HPHit) & (fliesmatrix[f,t-1,0]>0) & (fliesmatrix[f,t,2] != np.nan): # Fly dies due to HPHit
                     fliesmatrix[f,t:,:]=np.nan
                     numberofdeadflies=numberofdeadflies+1
-                if (np.isnan(fliesmatrix[f,t,0]))&(fliesmatrix[f,t-1,0]!=np.nan):
+                if (np.isnan(fliesmatrix[f,t,0]))&(fliesmatrix[f,t-1,0]!=np.nan): # Change status of fly to dead
                     fliesmatrix[f,t:,:]=np.nan
-                if (fliesmatrix[f,t,1]>=matureAge) & (np.random.random_sample() < birthprob):# & (fliesmatrix[f,t,0]!=0):
+                if (fliesmatrix[f,t,1]>=matureAge) & (np.random.random_sample() < birthprob): # Birth of a fly!
                     newbornflies=newbornflies+1
                     fliesmatrix[numberofflies,t,0]=newflyHP
                     fliesmatrix[numberofflies,t,1]=firstday
                     fliesmatrix[numberofflies,t,2]=fliesmatrix[f,t,2]
-                    if newflyHP<=0:
-                        break
+                    # if newflyHP<=0: # when would newflyHP be less than 0?
+                    #     break
                     numberofflies=numberofflies+1
-                if numberofflies==flybuffer:
+                if numberofflies==flybuffer: # Used to extend flybuffer if numberofflies exceeds the space given
                     extrabuffer=np.zeros((20,numberofdays, numdimensions))
                     extrabuffer[:,:,:]=np.nan
                     fliesmatrix=np.vstack((fliesmatrix, extrabuffer))
                     flybuffer=flybuffer+20
-        flyarray[t]=numberofflies-numberofdeadflies
+        flyarray[t]=numberofflies-numberofdeadflies # Needed for the fly mean in multipleruns function
         toc = time.perf_counter()
     return fliesmatrix, flyarray;
 
 def metropolishastingsdrift(currentvalue, variability):
     #randomly drift using metropolishastings to avoid too much of a difference
-    percentdrift=.9999
+    percentdrift=.2
     pcurrentvalue=stat.norm.pdf(currentvalue,0,variability)
     # proposedvalue=np.random.normal(0,variability)
-    proposedvalue=np.random.normal(0,variability)*percentdrift+currentvalue*(1-percentdrift)
+    proposedvalue=np.random.normal(currentvalue,variability*percentdrift)
 
     pproposedvalue=stat.norm.pdf(proposedvalue,0,variability)
     if pproposedvalue/pcurrentvalue>(1-np.random.rand()):
