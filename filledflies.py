@@ -35,14 +35,12 @@ def filledflies(numberofflies, flyHP, dailyHPchange, tempdata, matureAge, initva
             if fliesmatrix[f,t,2]!=np.nan:
                 fliesmatrix[f,t,2]=fliesmatrix[f,t-1,2]
                 effectivetemp=tempdata[t]-fliesmatrix[f,t,2]
+                matureHit=matureAge/(0.2306*effectivetemp*effectivetemp-11.828*effectivetemp+158.34+1) # From Cain et al.
                 if (fliesmatrix[f,t-1,1]!=np.nan) & (fliesmatrix[f,t-1,1]<10): 
-                    matureHit=matureAge/(0.2306*effectivetemp*effectivetemp-11.828*effectivetemp+158.34+1) # From Cain et al.
-                    q=fliesmatrix[f,t-1,1] # only "q" in the code
                     fliesmatrix[f,t,1]=fliesmatrix[f,t-1,1]+matureHit
                     if fliesmatrix[f,t,1]>=10:
                         fliesmatrix[f,t,2]=np.random.normal(0, initvariability)
                 if fliesmatrix[f,t-1,1]>=10:
-                    matureHit=matureAge/(0.2306*effectivetemp*effectivetemp-11.828*effectivetemp+158.34+1) # From Cain et al. Can't we pull this out in front of the loop?
                     fliesmatrix[f,t,1]=fliesmatrix[f,t-1,1]+matureHit
                     fliesmatrix[f,t,2]=metropolishastingsdrift(fliesmatrix[f,t,2], driftvariability)
                 HPHit=flyHP/(0.4074*effectivetemp*effectivetemp-28.356*effectivetemp+506.2)
